@@ -12,11 +12,13 @@ pub struct Application<'a> {
 
 impl Application<'_> {
     pub fn new (width: i32, height: i32, title: &str) -> Application {
-        let (rl, thread) = raylib::init()
+        let (mut rl, thread) = raylib::init()
             .size(width, height)
             .title(title)
             .build();
         
+        rl.set_target_fps(60);
+
         Application { width: width, height: height, _title: title, raylib_handle: RefCell::new(rl), thread: thread }
     }
 
@@ -46,6 +48,12 @@ impl Render for Bird {
     }
 }
 
+impl Update for Bird {
+    fn update (&self) {
+        println!("Updating Bird");
+    }
+}
+
 impl Render for RenderRect {
     fn render (&self, context: &mut RaylibDrawHandle) {
         context.draw_rectangle_rec(Rectangle { x: self.position.x, y: self.position.y, width: self.size.x, height: self.size.y }, Color::GOLD);
@@ -54,4 +62,8 @@ impl Render for RenderRect {
 
 pub trait Render {
     fn render (&self, context: &mut RaylibDrawHandle);
+}
+
+pub trait Update {
+    fn update (&self);
 }

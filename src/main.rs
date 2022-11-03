@@ -1,6 +1,6 @@
 use raylib::prelude::*;
 
-use rusty_bird::{Application, RenderRect, Render, Bird};
+use rusty_bird::{Application, RenderRect, Render, Bird, Update};
 
 fn main() {
     let app = Application::new(640, 960, "title");
@@ -9,7 +9,7 @@ fn main() {
     let mut player_bird = Bird{ position: Vector2 { x: 640.0/2.0, y: 960.0/2.0 }, radius: 24.0, color: Color::DARKPURPLE };
 
     while !handle.window_should_close() {
-        player_bird.position.y -= 0.5;
+        player_bird.update();
 
         let mut d = handle.begin_drawing(&app.thread);
 
