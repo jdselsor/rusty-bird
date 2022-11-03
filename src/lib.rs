@@ -34,6 +34,18 @@ pub struct RenderRect {
     pub size: Vector2,
 }
 
+pub struct Bird {
+    pub position: Vector2,
+    pub radius: f32,
+    pub color: Color,
+}
+
+impl Render for Bird {
+    fn render (&self, context: &mut RaylibDrawHandle) {
+        context.draw_circle_v(self.position, self.radius, self.color);
+    }
+}
+
 impl Render for RenderRect {
     fn render (&self, context: &mut RaylibDrawHandle) {
         context.draw_rectangle_rec(Rectangle { x: self.position.x, y: self.position.y, width: self.size.x, height: self.size.y }, Color::GOLD);
