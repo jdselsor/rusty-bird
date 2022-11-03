@@ -2,6 +2,8 @@ use std::cell::RefCell;
 
 use raylib::prelude::*;
 
+const GRAVITY: f32 = 1.0;
+
 pub struct Application<'a> {
     width: i32,
     height: i32,
@@ -31,15 +33,17 @@ impl Application<'_> {
     }
 }
 
-pub struct RenderRect {
-    pub position: Vector2,
-    pub size: Vector2,
-}
-
 pub struct Bird {
     pub position: Vector2,
+    pub velocity: Vector2,
     pub radius: f32,
     pub color: Color,
+}
+
+impl Bird {
+    fn new (position: Vector2, radius: f32, color: Color) -> Bird {
+        Bird { position: position, velocity: Vector2 {x: 0.0, y: 0.0}, radius: radius, color: color }
+    }
 }
 
 impl Render for Bird {
@@ -49,14 +53,8 @@ impl Render for Bird {
 }
 
 impl Update for Bird {
-    fn update (&self) {
-        println!("Updating Bird");
-    }
-}
-
-impl Render for RenderRect {
-    fn render (&self, context: &mut RaylibDrawHandle) {
-        context.draw_rectangle_rec(Rectangle { x: self.position.x, y: self.position.y, width: self.size.x, height: self.size.y }, Color::GOLD);
+    fn update (&mut self) {
+        self.position.y += GRAVITY;
     }
 }
 
@@ -65,5 +63,5 @@ pub trait Render {
 }
 
 pub trait Update {
-    fn update (&self);
+    fn update (&mut self);
 }
