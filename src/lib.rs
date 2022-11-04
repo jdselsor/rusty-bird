@@ -12,6 +12,13 @@ pub struct Application<'a> {
     pub thread: RaylibThread,
 }
 
+pub struct Bird {
+    pub position: Vector2,
+    pub velocity: Vector2,
+    pub radius: f32,
+    pub color: Color,
+}
+
 impl Application<'_> {
     pub fn new (width: i32, height: i32, title: &str) -> Application {
         let (mut rl, thread) = raylib::init()
@@ -33,16 +40,14 @@ impl Application<'_> {
     }
 }
 
-pub struct Bird {
-    pub position: Vector2,
-    pub velocity: Vector2,
-    pub radius: f32,
-    pub color: Color,
-}
-
 impl Bird {
-    fn new (position: Vector2, radius: f32, color: Color) -> Bird {
+    pub fn new (position: Vector2, radius: f32, color: Color) -> Bird {
         Bird { position: position, velocity: Vector2 {x: 0.0, y: 0.0}, radius: radius, color: color }
+    }
+
+    pub fn set_velocity (&mut self, x: f32, y: f32) {
+        self.velocity.x = x;
+        self.velocity.y = y;
     }
 }
 
@@ -54,7 +59,8 @@ impl Render for Bird {
 
 impl Update for Bird {
     fn update (&mut self) {
-        self.position.y += GRAVITY;
+        self.velocity.y += GRAVITY;
+        self.position = self.position + self.velocity;
     }
 }
 
