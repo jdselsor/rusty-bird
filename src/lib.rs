@@ -19,6 +19,13 @@ pub struct Bird {
     pub color: Color,
 }
 
+pub struct Pipe {
+    pub position: Vector2,
+    pub velocity: Vector2,
+    pub dimensions: Vector2,
+    pub color: Color,
+}
+
 impl Application<'_> {
     pub fn new (width: i32, height: i32, title: &str) -> Application {
         let (mut rl, thread) = raylib::init()
@@ -51,23 +58,38 @@ impl Bird {
     }
 }
 
-impl Render for Bird {
+impl Pipe {
+    pub fn new (position: Vector2, dimensions: Vector2, color: Color) -> Pipe {
+        Pipe { position: position, velocity: Vector2 { x: 0.0, y: 0.0 }, dimensions: dimensions, color: color }
+    } 
+}
+
+impl Entity for Pipe {
     fn render (&self, context: &mut RaylibDrawHandle) {
-        context.draw_circle_v(self.position, self.radius, self.color);
+        context.draw_rectangle_v(self.position, self.dimensions, self.color);
+    }
+
+    fn update (&mut self, handle: RaylibHandle) {
+        
     }
 }
 
-impl Update for Bird {
-    fn update (&mut self) {
+impl Entity for Bird {
+    fn render (&self, context: &mut RaylibDrawHandle) {
+        context.draw_circle_v(self.position, self.radius, self.color);
+    }
+
+    fn update (&mut self, handle: RaylibHandle) {
+        if handle.is_key_pressed(KeyboardKey::KEY_SPACE) {
+            self.set_velocity(0.0, -25.0);
+        }
+
         self.velocity.y += GRAVITY;
         self.position = self.position + self.velocity;
     }
 }
 
-pub trait Render {
+pub trait Entity {
     fn render (&self, context: &mut RaylibDrawHandle);
-}
-
-pub trait Update {
-    fn update (&mut self);
+    fn update (&mut self, handle: RaylibHandle);
 }
