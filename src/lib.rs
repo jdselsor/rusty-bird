@@ -1,4 +1,4 @@
-use std::cell::RefCell;
+use std::cell::{RefCell, RefMut};
 
 use raylib::prelude::*;
 
@@ -69,7 +69,7 @@ impl Entity for Pipe {
         context.draw_rectangle_v(self.position, self.dimensions, self.color);
     }
 
-    fn update (&mut self, handle: RaylibHandle) {
+    fn update (&mut self, handle: &mut RaylibHandle) {
         
     }
 }
@@ -79,7 +79,7 @@ impl Entity for Bird {
         context.draw_circle_v(self.position, self.radius, self.color);
     }
 
-    fn update (&mut self, handle: RaylibHandle) {
+    fn update (&mut self, handle: &mut RaylibHandle) {
         if handle.is_key_pressed(KeyboardKey::KEY_SPACE) {
             self.set_velocity(0.0, -25.0);
         }
@@ -91,5 +91,5 @@ impl Entity for Bird {
 
 pub trait Entity {
     fn render (&self, context: &mut RaylibDrawHandle);
-    fn update (&mut self, handle: RaylibHandle);
+    fn update (&mut self, handle: &mut RaylibHandle);
 }

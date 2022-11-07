@@ -1,5 +1,3 @@
-extern crate raylib;
-
 use std::borrow::{Borrow, BorrowMut};
 
 use raylib::prelude::*;
@@ -20,13 +18,13 @@ fn main() {
     entites.push(Box::new(temp_pipe));
 
     while !handle.window_should_close() {
-        let mut d = handle.begin_drawing(&app.thread);
+        let mut draw_handle = handle.begin_drawing(&app.thread);
 
         for ent in entites.iter_mut() {
-            ent.update(handle.borrow_mut());
-            ent.render(&mut d);
+            ent.update(&mut handle);
+            ent.render(&mut draw_handle);
         }
 
-        d.clear_background(Color::WHITE);
+        draw_handle.clear_background(Color::WHITE);
     }
 }
